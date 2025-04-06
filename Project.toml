@@ -1,0 +1,4 @@
+name = "TimingDebug"
+uuid = "9ca4fea4-e9d7-4fc5-83e1-97a855f29d1d"
+authors = ["Prateek Ganguli <prateek.ganguli@gmail.com>"]
+version = "0.1.0"
