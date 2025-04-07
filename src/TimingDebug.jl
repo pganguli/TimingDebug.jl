@@ -1,12 +1,33 @@
 module TimingDebug
 
+using ControlSystemsBase: c2d, Continuous
+using LinearAlgebra: eigvals
+
 struct Omega
   P::Vector{Float64}
   U::Float64
   F::Float64
 end
 
-function optimal_timing_debugging(A::Vector, B::Vector, C::Vector, K::Vector, e::Vector, p::Vector, ∆ₚ::Float64)
+function closedLoopPoles(sys::Continuous, K::AbstractMatrix, p::Float64)
+  sys_d = c2d(sys, p)
+  A_cl = sys_d.A - sys_d.B * K
+  poles = eigvals(A_cl)
+  return poles
+end
+
+function isStable(sys::Continuous, K::AbstractMatrix, p::Float64)
+  poles = closedLoopPoles(sys, K, p)
+  return all(abs.(poles) .< 1)
+end
+
+function calculateF(sys::Continuous, K::AbstractMatrix, p::Float64, p′::Float64)
+  poles = closedLoopPoles(sys, K, p)
+  poles′ = closedLoopPoles(sys, K, p′)
+  return abs(abs(poles[1]) - abs(poles′[1]))
+end
+
+function optimalTimingDebugging(sys::Vector{Continuous}, K::Vector{AbstractMatrix}, e::Vector, p::Vector, ∆ₚ::Float64)
   Ω = Omega[]
   push!(Ω, Omega(p, sum((e[i] / p[i]) for i in eachindex(p)), 0.0))
   while any(Ωᵢ -> Ωᵢ.U > 1, Ω)
@@ -18,9 +39,9 @@ function optimal_timing_debugging(A::Vector, B::Vector, C::Vector, K::Vector, e:
         for j in eachindex(p)
           Ω✶ = copy(Ωᵢ)
           Ω✶.P[j] += ∆ₚ
-          if stable(Ω✶.P[j], A[j], B[j], C[j], K[j])
-            Ω✶.U = sum((e[k] / Ω✶.P[k]) for k in 1:n)
-            Ω✶.F = calculateF(Ω✶.P)
+          if isStable(sys[j], K[j], Ω✶.P[j])
+            Ω✶.U = sum((e[k] / Ω✶.P[k]) for k in eachindex(p))
+            Ω✶.F = calculateF(sys[j], K[j], Ω✶.P - ∆ₚ, Ω✶.P)
             push!(Ω′, Ω✶)
           end
         end
