@@ -1,20 +1,18 @@
-using ControlSystemsBase: Continuous
-
-function optimalTimingDebugging(sys::Vector{Continuous}, K::Vector{AbstractMatrix}, e::Vector, p::Vector, ∆ₚ::Float64, calculateF::Function)
+function optimalTimingDebugging(τ::Vector{Task}, calculateF::Function, ∆ₚ::Float64=0.1e-3)
   Ω = Omega[]
-  push!(Ω, Omega(p, sum((e[i] / p[i]) for i in eachindex(p)), 0.0))
+  push!(Ω, Omega([τᵢ.p for τᵢ in τ], sum((τᵢ.e / τᵢ.p) for τᵢ in τ), 0.0))
   while any(Ωᵢ -> Ωᵢ.U > 1, Ω)
     Ω′ = Omega[]
     for Ωᵢ in Ω
       if Ωᵢ.U ≤ 1
         push!(Ω′, Ωᵢ)
       else
-        for j in eachindex(p)
-          Ω✶ = copy(Ωᵢ)
+        for j in eachindex(τ)
+          Ω✶ = deepcopy(Ωᵢ)
           Ω✶.P[j] += ∆ₚ
-          if isStable(sys[j], K[j], Ω✶.P[j])
-            Ω✶.U = sum((e[k] / Ω✶.P[k]) for k in eachindex(p))
-            Ω✶.F = calculateF(sys[j], K[j], Ω✶.P - ∆ₚ, Ω✶.P)
+          if isStable(τ[j].sys, τ[j].K, Ω✶.P[j])
+            Ω✶.U = sum((τ[k].e / Ω✶.P[k]) for k in eachindex(τ))
+            Ω✶.F = calculateF(τ[j].sys, τ[j].K, Ω✶.P .- ∆ₚ, Ω✶.P)
             push!(Ω′, Ω✶)
           end
         end
