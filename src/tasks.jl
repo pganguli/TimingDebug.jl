@@ -1,3 +1,7 @@
+"""
+Table 1: Case Study Specification
+"""
+
 using ControlSystemsBase: ss
 
 sys₁ = let
@@ -7,7 +11,10 @@ sys₁ = let
   D = 0
   ss(A, B, C, D)
 end
+ρ₁ = [0.5, 0.5, 0.5]
 K₁ = [122.8023 16.7514 0.3311]
+e₁ = 5e-3
+p₁ = 15e-3
 
 sys₂ = let
   A = [-0.2 0.67; -10 -100]
@@ -16,7 +23,10 @@ sys₂ = let
   D = 0
   ss(A, B, C, D)
 end
+ρ₂ = [0.4, 0.4, 0.4]
 K₂ = [0.1365 0.0009 0.1655]
+e₂ = 3e-3
+p₂ = 10e-3
 
 sys₃ = let
   A = [-10 1; -0.2 -15]
@@ -25,7 +35,10 @@ sys₃ = let
   D = 0
   ss(A, B, C, D)
 end
+ρ₃ = [0.7, 0.7, 0.7]
 K₃ = [0.2938 0.0566 -0.5405]
+e₃ = 6e-3
+p₃ = 20e-3
 
 sys₄ = let
   A = [0 1 0; 0 -1.0865 8.4872e3; 0 -9.9636e3 -1.4545e6]
@@ -34,7 +47,10 @@ sys₄ = let
   D = 0
   ss(A, B, C, D)
 end
+ρ₄ = [0.7, 0.7, 0.7, 0.7]
 K₄ = [0.0091 0.0201 5.6765 -1.6308]
+e₄ = 8e-3
+p₄ = 30e-3
 
 sys₅ = let
   A = [0 1 0; 0 -0.0227 54.5455; 0 -35.2857 -70]
@@ -43,6 +59,15 @@ sys₅ = let
   D = 0
   ss(A, B, C, D)
 end
+ρ₅ = [0.3, 0.3, 0.3, 0.3]
 K₅ = [23.3252 0.8360 0.6791 0.4576]
+e₅ = 7e-3
+p₅ = 25e-3
 
-models = [(sys₁, K₁), (sys₂, K₂), (sys₃, K₃), (sys₄, K₄), (sys₅, K₅)]
+τ = [
+  TaskSet(sys₁, ρ₁, K₁, e₁, p₁),
+  TaskSet(sys₂, ρ₂, K₂, e₂, p₂),
+  TaskSet(sys₃, ρ₃, K₃, e₃, p₃),
+  TaskSet(sys₄, ρ₄, K₄, e₄, p₄),
+  TaskSet(sys₅, ρ₅, K₅, e₅, p₅),
+]

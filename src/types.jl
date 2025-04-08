@@ -1,14 +1,15 @@
 using ControlSystemsBase: StateSpace, Continuous
 
 mutable struct Omega
-  P::Vector{Float64}
-  U::Float64
-  F::Float64
+  P::Vector{Float64} # Periods
+  U::Float64         # Utilizations
+  F::Float64         # Objective values
 end
 
-struct Task
-  sys::StateSpace{Continuous}
-  K::AbstractMatrix
-  e::Float64
-  p::Float64
+struct TaskSet
+  sys::StateSpace{Continuous} # State-Space System
+  ρ::Vector{Float64}          # Original poles
+  K::AbstractMatrix           # Feedback gain
+  e::Float64                  # Execution time
+  p::Float64                  # Period
 end

@@ -1,4 +1,5 @@
-function optimalTimingDebugging(τ::Vector{Task}, calculateF::Function, ∆ₚ::Float64=0.1e-3)
+"Algorithm 1: Optimal Timing Debugging"
+function optimalTimingDebugging(τ::Vector{TaskSet}, calculateF::Function, ∆ₚ::Float64=0.1e-3)
   Ω = Omega[]
   push!(Ω, Omega([τᵢ.p for τᵢ in τ], sum((τᵢ.e / τᵢ.p) for τᵢ in τ), 0.0))
   while any(Ωᵢ -> Ωᵢ.U > 1, Ω)
@@ -12,7 +13,7 @@ function optimalTimingDebugging(τ::Vector{Task}, calculateF::Function, ∆ₚ::
           Ω✶.P[j] += ∆ₚ
           if isStable(τ[j].sys, τ[j].K, Ω✶.P[j])
             Ω✶.U = sum((τ[k].e / Ω✶.P[k]) for k in eachindex(τ))
-            Ω✶.F = calculateF(τ[j].sys, τ[j].K, Ω✶.P .- ∆ₚ, Ω✶.P)
+            Ω✶.F = calculateF(τ[j].sys, τ[j].K, τ[j].ρ, Ω✶.P)
             push!(Ω′, Ω✶)
           end
         end
@@ -27,6 +28,6 @@ function optimalTimingDebugging(τ::Vector{Task}, calculateF::Function, ∆ₚ::
       end
     end
   end
-  i✶ = argmin(Ωⱼ -> Ωⱼ.F, Ω)
-  return Ω[i✶].P
+  P✶ = argmin(Ωⱼ -> Ωⱼ.F, Ω)
+  return P✶
 end

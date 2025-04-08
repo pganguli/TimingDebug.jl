@@ -1,10 +1,10 @@
 module TimingDebug
 
-include("models.jl")
-export models
-
 include("types.jl")
-export Omega, Task
+export Omega, TaskSet
+
+include("tasks.jl")
+export τ
 
 include("utils.jl")
 export closedLoopPoles, isStable

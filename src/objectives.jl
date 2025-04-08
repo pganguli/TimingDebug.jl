@@ -1,19 +1,34 @@
 using ControlSystemsBase: StateSpace, Continuous
 
-function F₁(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Vector{Float64}, p′::Vector{Float64})
-  poles = [closedLoopPoles(sys, K, pᵢ) for pᵢ in p]
-  poles′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
-  return sum(abs(abs(poles[i][1]) - abs(poles′[i][1])) for i in eachindex(poles))
+"""
+  F₁(sys, K, ρ, p′)
+
+Compute the objective function `F₁` for system `sys` with feedback gain `K`.
+Original closed loop poles are `ρ` and new periods are `p′`.
+"""
+function F₁(sys::StateSpace{Continuous}, K::AbstractMatrix, ρ::Vector{Float64}, p′::Vector{Float64})
+  ρ′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
+  return sum(abs(abs(ρ[1]) - abs(ρ′ᵢ[1])) for ρ′ᵢ in ρ′)
 end
 
-function F₂(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Vector{Float64}, p′::Vector{Float64})
-  poles = [closedLoopPoles(sys, K, pᵢ) for pᵢ in p]
-  poles′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
-  return sum(abs(poles - poles′) / length(poles) for i in eachindex(poles))
+"""
+  F₂(sys, K, ρ, p′)
+
+Compute the objective function `F₂` for system `sys` with feedback gain `K`.
+Original closed loop poles are `ρ` and new periods are `p′`.
+"""
+function F₂(sys::StateSpace{Continuous}, K::AbstractMatrix, ρ::Vector{Float64}, p′::Vector{Float64})
+  ρ′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
+  return sum(abs(ρ - ρ′ᵢ) / length(ρ) for ρ′ᵢ in ρ′)
 end
 
-function F₃(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Vector{Float64}, p′::Vector{Float64})
-  poles = [closedLoopPoles(sys, K, pᵢ) for pᵢ in p]
-  poles′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
-  return sum((abs(abs(poles[i][1]) - abs(poles′[i][1]))*abs(poles[i][1]))^2 for i in eachindex(poles))
+"""
+  F₃(sys, K, ρ, p′)
+
+Compute the objective function `F₃` for system `sys` with feedback gain `K`.
+Original closed loop poles are `ρ` and new periods are `p′`.
+"""
+function F₃(sys::StateSpace{Continuous}, K::AbstractMatrix, ρ::Vector{Float64}, p′::Vector{Float64})
+  ρ′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
+  return sum((abs(abs(ρ[1]) - abs(ρ′ᵢ))*abs(ρ[1]))^2 for ρ′ᵢ in ρ′)
 end
