@@ -8,7 +8,7 @@ Original closed loop poles are `ρ` and new periods are `p′`.
 """
 function F₁(sys::StateSpace{Continuous}, K::AbstractMatrix, ρ::Vector{Float64}, p′::Vector{Float64})
   ρ′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
-  return sum(abs(abs(ρ[1]) - abs(ρ′ᵢ[1])) for ρ′ᵢ in ρ′)
+  return sum(abs(abs(ρ[end]) - abs(ρ′ᵢ[end])) for ρ′ᵢ in ρ′)
 end
 
 """
@@ -30,5 +30,5 @@ Original closed loop poles are `ρ` and new periods are `p′`.
 """
 function F₃(sys::StateSpace{Continuous}, K::AbstractMatrix, ρ::Vector{Float64}, p′::Vector{Float64})
   ρ′ = [closedLoopPoles(sys, K, p′ᵢ) for p′ᵢ in p′]
-  return sum((abs(abs(ρ[1]) - abs(ρ′ᵢ))*abs(ρ[1]))^2 for ρ′ᵢ in ρ′)
+  return sum((abs(abs(ρ[end]) - abs(ρ′ᵢ))*abs(ρ[end]))^2 for ρ′ᵢ in ρ′)
 end
