@@ -1,9 +1,9 @@
 ```sh
 $ julia
-
-(@v1.11) pkg> activate .
   Activating project at `~/TimingDebug.jl`
-
-julia> include("main.jl")
-Omega([0.02659999999999993, 0.020599999999999938, 0.029199999999999945, 0.03360000000000006, 0.03149999999999997], 0.9993979051454511, 0.28954169751108827)
+  
+(TimingDebug) pkg> test
+     Testing TimingDebug
+     Testing Running tests...
+     Testing TimingDebug tests passed
 ```
