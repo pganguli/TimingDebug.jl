@@ -1,14 +1,18 @@
 name = "TimingDebug"
 uuid = "9ca4fea4-e9d7-4fc5-83e1-97a855f29d1d"
 authors = ["Prateek Ganguli <prateek.ganguli@gmail.com>"]
-version = "0.1.0"
+version = "1.0.0"
 
 [deps]
 ControlSystemsBase = "aaaaaaaa-a6ca-5380-bf3e-84a91bcd477e"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 ControlSystemsBase = "1.14.5"
 LinearAlgebra = "1.11.0"
-Test = "1.11.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
