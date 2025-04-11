@@ -20,7 +20,7 @@ Compute the dominant pole of the closed loop system `sys` with feedback gain `K`
 discretized with sampling period `h = p` and one-sample delay.
 """
 dominant_pole(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Float64) = dominant_pole(closed_loop_poles(sys, K, p))
-function dominant_pole(poles::Vector{ComplexF64})
+function dominant_pole(poles::Vector{<:Complex})
     argmax(abs, poles)
 end
 
