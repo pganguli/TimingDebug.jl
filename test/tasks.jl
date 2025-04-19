@@ -3,6 +3,7 @@ Table 1: Case Study Specification
 """
 
 using ControlSystemsBase: c2d, place, ss, delay
+using TimingDebug: TaskSet
 
 sys₁ = let
     A = [-10 1; -0.02 -2]

@@ -27,7 +27,7 @@ function F₂(τ::Vector{TaskSet}, p′::Vector{Float64})
     sum(
         begin
             ρᵢ = τ[i].ρ
-            ρ′ᵢ = closed_loop_poles(τ[i].sys, τ[i].K, p′[i])
+            ρ′ᵢ = poles(closed_loop_system(τ[i].sys, τ[i].K, p′[i]))
             sum(abs.(ρᵢ - ρ′ᵢ)) / length(ρᵢ)
         end
         for i in eachindex(τ)

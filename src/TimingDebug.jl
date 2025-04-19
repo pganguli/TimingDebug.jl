@@ -4,7 +4,7 @@ include("types.jl")
 export TaskSet
 
 include("utils.jl")
-export closed_loop_poles, dominant_pole, is_stable
+export closed_loop_system, dominant_pole, is_stable, period_ub
 
 include("objectives.jl")
 export F₁, F₂, F₃

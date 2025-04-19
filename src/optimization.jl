@@ -17,7 +17,7 @@ function optimal_timing_debugging(objective::Function, τ::Vector{TaskSet}, ∆�
                 for j in eachindex(τ)
                     Ω✶ = deepcopy(Ωᵢ)
                     Ω✶.P[j] += ∆ₚ
-                    if is_stable(τ[j].sys, τ[j].K, Ω✶.P[j])
+                    if is_stable(τ[j].sys, τ[j].K, Ω✶.P[j]) && Ω✶.P[j] ≤ period_ub(τ[j].sys, τ[j].K, τ[j].p)
                         Ω✶.U = sum((τ[k].e / Ω✶.P[k]) for k in eachindex(τ))
                         Ω✶.F = objective(τ, Ω✶.P)
                         push!(Ω′, Ω✶)
