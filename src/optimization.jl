@@ -68,3 +68,18 @@ function _adjust_periods(objective::Function, T::Vector{TaskSet}, ::LocalSearchA
     end
     argmin(Ωⱼ -> Ωⱼ.F, Ω).P
 end
+
+
+struct ExhaustiveSearchAlg <: PeriodAdjustmentAlgorithm end
+
+"""
+    ExhaustiveSearch
+
+Use an exhaustive search to optimally adjust periods over the assignments specified
+by an iterator `itr`.
+"""
+const ExhaustiveSearch = ExhaustiveSearchAlg()
+
+function _adjust_periods(objective::Function, T::Vector{TaskSet}, ::ExhaustiveSearchAlg; itr)
+    argmin(P -> objective(T, P), itr)
+end

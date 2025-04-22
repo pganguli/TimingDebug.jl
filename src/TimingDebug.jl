@@ -10,6 +10,6 @@ include("objectives.jl")
 export F₁, F₂, F₃
 
 include("optimization.jl")
-export adjust_periods, LocalSearch
+export adjust_periods, LocalSearch, ExhaustiveSearch
 
 end # module TimingDebug
