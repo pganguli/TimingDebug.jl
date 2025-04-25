@@ -49,11 +49,7 @@ nyquist_freq(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Float64) = nyqui
 Compute the Nyquist frequency (2 * Natrual frequency) of the poles of the
 closed loop system `sys_cl` in Hz.
 """
-function nyquist_freq(sys_cl::StateSpace{Discrete{Float64}, Float64})
-    Wn, _, _ = damp(sys_cl)
-    Wn ./= (2 * π)
-    return 2 .* Wn
-end
+nyquist_freq(sys_cl::StateSpace{Discrete{Float64}, Float64}) = return damp(sys_cl)[1] ./ π # (2/(2π))*(W)
 
 """
   period_ub(sys, K, p)
@@ -62,7 +58,4 @@ Compute the Nyquist period upper bound for the closed loop system `sys`
 with feedback gain `K`, discretized with sampling period `h = p`
 and one-sample delay.
 """
-function period_ub(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Float64)
-    W = nyquist_freq(sys, K, p)
-    maximum(W)^-1
-end
+period_ub(sys::StateSpace{Continuous}, K::AbstractMatrix, p::Float64) = maximum(nyquist_freq(sys, K, p))^-1
