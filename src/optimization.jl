@@ -81,5 +81,15 @@ by an iterator `itr`.
 const ExhaustiveSearch = ExhaustiveSearchAlg()
 
 function _adjust_periods(objective::Function, T::Vector{TaskSet}, ::ExhaustiveSearchAlg; itr)
-    argmin(P -> objective(T, P), itr)
+    P = argmin(itr) do P
+        # Check that all systems are stable with periods P
+        all(splat((t, p) -> is_stable(t.sys, t.K, p)), zip(T, P)) || return Inf
+        # Check that the task system is schedulable with periods P
+        sum(splat(/), Iterators.zip((t.e for t in T), P)) ≤ 1 || return Inf
+        objective(T, P)
+    end
+    # Double check that P is not spurious before returning
+    all(splat((t, p) -> is_stable(t.sys, t.K, p)), zip(T, P)) || throw(ErrorException("No safe periods found"))
+    sum(splat(/), Iterators.zip((t.e for t in T), P)) ≤ 1 || throw(ErrorException("No safe periods found"))
+    P
 end
